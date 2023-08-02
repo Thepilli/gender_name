@@ -1,0 +1,19 @@
+{
+  "welcome_title": "Vítejte na modelu oslovení",
+  "textFieldLabel": "Zadejte jméno",
+  "resultText": "Jméno patří pravděpodobně ",
+  "buttonCheck": "Zjisti jméno ",
+  "buttonCheckAgain": "Zjisti další jméno",
+  "explanationText": "Toto je zalozeno na {count} pripadech kdy se {(probability * 100).toInt()}% jedincu identifikovali jako {gender} '",
+  "disclainer": "Buďte si prosím vědomi, že výsledky jsou subjektivní, otevřené pro interpretaci a neměly by být použity k důležitým rozhodnutím. Jsou založeny na jazykovém modelu trénovaném na 114 milionech přípřípadů napříč 284 zeměmi",
+  "disclainerButton": "Upozornění",
+  "noMatch": "Takové jméno bohužel nebylo nalezeno",
+  "gender": {
+    "male": "muži",
+    "female": "ženě"
+  },
+  "genderVar": {
+    "male": "muž",
+    "female": "žena"
+  }
+}

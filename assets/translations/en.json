@@ -1,0 +1,19 @@
+{
+  "welcome_title": "Welcome to the Genderize model",
+  "textFieldLabel": "Enter the name",
+  "resultText": "The name is most likely ",
+  "buttonCheck": "Check the name",
+  "buttonCheckAgain": "Check another name",
+  "explanationText": "This is based on ${count} cases where ${(probability * 100).toInt()}% of individuals were ${gender} '",
+  "disclainer": "Please be aware that the results are subjective, open for interpretation and should not be used to make any important decisions. They are based on a language model trained on 114 million cases across 274 countries",
+  "disclainerButton": "Disclainer",
+  "noMatch": "Unfortunately, no records have been found for such name",
+  "gender": {
+    "male": "male",
+    "female": "female"
+  },
+  "genderVar": {
+    "male": "male",
+    "female": "female"
+  }
+}

@@ -7,13 +7,13 @@ import 'dart:convert';
 class GenderName {
   int count;
   String name;
-  String gender;
+  String? gender;
   double probability;
 
   GenderName({
     required this.count,
     required this.name,
-    required this.gender,
+    this.gender,
     required this.probability,
   });
 

@@ -1,13 +1,17 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_name/constants/applystyle.dart';
 import 'package:gender_name/constants/colors.dart';
+import 'package:gender_name/services/localization.dart';
 import 'package:gender_name/widgets/gender_circle.dart';
 import 'package:gender_name/widgets/height_box.dart';
 import 'package:gender_name/model/gender_name.dart';
 import 'package:gender_name/services/gender_name_service.dart';
 import 'package:gender_name/widgets/material_button.dart';
 import 'package:gender_name/widgets/width_box.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,10 +27,13 @@ class _HomePageState extends State<HomePage> {
   int count = 0;
   String name = '';
   String gender = '';
+  String genderT = '';
+  bool noMatchFound = false;
   double probability = 0;
   bool isRunning = true;
-  bool isFemaleNotPicked = true;
-  bool isMaleNotPicked = true;
+  bool isFemale = false;
+  bool isMale = false;
+  bool receivedResponse = false;
 
   @override
   void initState() {
@@ -54,6 +61,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Locale currentLocale = context.locale;
+
     return Scaffold(
       backgroundColor: const Color(0xFFf5de94),
       body: SingleChildScrollView(
@@ -67,12 +76,50 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     //welcome
                     //text
-                    Text(
-                      "Welcome to the Genderize model",
-                      textAlign: TextAlign.center,
-                      style: appstyle(30, AppColors.jPrimaryColor, FontWeight.w700),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 400),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'welcome_title'.tr(),
+                              textAlign: TextAlign.center,
+                              style:
+                                  GoogleFonts.russoOne(fontSize: 35, color: AppColors.jPrimaryColor, fontWeight: FontWeight.w700),
+                              // style: appstyle(30, AppColors.jPrimaryColor, FontWeight.w700),
+                            ),
+                          ),
+                          const WidthBox(width: 20),
+                          ToggleSwitch(
+                            customIcons: const [
+                              Icon(
+                                Icons.translate,
+                                size: 15.0,
+                                color: AppColors.whiteColor,
+                              ),
+                              Icon(
+                                Icons.translate,
+                                size: 15.0,
+                                color: AppColors.whiteColor,
+                              ),
+                            ],
+                            isVertical: true,
+                            minWidth: 60,
+                            animate: true,
+                            cornerRadius: 20.0,
+                            initialLabelIndex: context.locale == const Locale('en') ? 0 : 1,
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            labels: const ['EN', 'CS'],
+                            onToggle: (index) {
+                              LocalizationService.changeLocale(context, index!);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    const HeightBox(height: 40),
+                    const HeightBox(height: 20),
 
                     // enter the name  -- use whisperrer for the most common names? DB of czech names?
                     ConstrainedBox(
@@ -83,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                           FocusManager.instance.primaryFocus?.unfocus();
                         },
                         decoration: InputDecoration(
-                          labelText: 'Enter the name',
+                          labelText: 'textFieldLabel'.tr(),
                           enabledBorder: OutlineInputBorder(
                             borderSide: const BorderSide(color: AppColors.jPrimaryColor, width: 3),
                             borderRadius: BorderRadius.circular(20),
@@ -98,20 +145,20 @@ class _HomePageState extends State<HomePage> {
                     const HeightBox(height: 40),
 
                     ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 400),
+                      constraints: const BoxConstraints(maxWidth: 400, minHeight: 200),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           GenderCircle(
                             imgPath: 'assets/images/male_circle.png',
                             shadowColor: Colors.blueAccent,
-                            isNotPicked: isMaleNotPicked,
+                            isPicked: isMale,
                           ),
                           const WidthBox(width: 20),
                           GenderCircle(
                             imgPath: 'assets/images/female_circle.png',
                             shadowColor: Colors.pinkAccent,
-                            isNotPicked: isFemaleNotPicked,
+                            isPicked: isFemale,
                           ),
                         ],
                       ),
@@ -119,17 +166,25 @@ class _HomePageState extends State<HomePage> {
                     const HeightBox(height: 40),
 
                     Text(
-                      capitalizeFirstLetter(name),
+                      capitalizeFirstLetter(name.toLowerCase()),
                       style: appstyle(
                         30,
                         gender == 'male' ? Colors.blueAccent : Colors.pinkAccent,
                         FontWeight.w500,
                       ),
                     ),
-                    Text(
-                      'The name is most likely $gender',
-                      style: appstyle(15, AppColors.textDarkColor, FontWeight.normal),
-                    ),
+                    receivedResponse
+                        ? Text(
+                            'resultText'.tr() + tr('gender.${genderResult?.gender}'),
+                            style: appstyle(15, AppColors.textDarkColor, FontWeight.normal),
+                          )
+                        : noMatchFound
+                            ? SizedBox(
+                                width: 300,
+                                child: Text('noMatch'.tr(),
+                                    style: appstyle(15, AppColors.textDarkColor, FontWeight.w200), textAlign: TextAlign.center),
+                              )
+                            : const SizedBox(),
 
                     const HeightBox(height: 40),
                     LinearPercentIndicator(
@@ -150,35 +205,84 @@ class _HomePageState extends State<HomePage> {
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 400),
                       child: MyMaterialButton(
-                          buttonText: name == '' ? 'Check the name' : 'Check another name',
+                          buttonText: name == '' ? 'buttonCheck'.tr() : 'buttonCheckAgain'.tr(),
                           onPressed: () async {
                             genderResult = await GendernameService().getGender(name: nameController.text);
+                            print(genderResult?.toJson());
                             setState(() {
-                              nameController.clear();
-                              count = genderResult?.count ?? 0;
-                              name = genderResult?.name ?? '';
-                              gender = genderResult?.gender ?? '';
-                              probability = genderResult?.probability ?? 0;
-                              isFemaleNotPicked = gender == 'female' ? true : false;
-                              isMaleNotPicked = gender == 'male' ? true : false;
+                              if (genderResult?.gender != null) {
+                                nameController.clear();
+                                count = genderResult?.count ?? 0;
+                                name = genderResult?.name ?? '';
+                                gender = genderResult?.gender ?? '';
+                                probability = genderResult?.probability ?? 0;
+                                isFemale = gender == 'female' ? true : false;
+                                isMale = gender == 'male' ? true : false;
+                                receivedResponse = true;
+                                // genderT = tr('gender.${genderResult?.gender}');
+                              } else {
+                                receivedResponse = false;
+                                noMatchFound = true;
+                                nameController.clear();
+                              }
                             });
                           },
                           isEnabled: _isEnabled),
                     ),
                   ],
                 ),
-                Text(
-                  'This is based on $count cases where ${(probability * 100).toInt()}% of individuals were $gender ',
-                  textAlign: TextAlign.center,
-                  style: appstyle(15, AppColors.textDarkColor, FontWeight.normal),
-                ),
-                // const Text(
-                //     "Please be aware that the results are subjective, open for interpretation and should not be used to make any important decisions. They are based on a language model trained on 114 million cases "),
-                // const HeightBox(height: 20),
+                receivedResponse && currentLocale.languageCode == 'en'
+                    ? ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Text(
+                          'This is based on $count cases where ${(probability * 100).toInt()}% of individuals were $gender ',
+                          textAlign: TextAlign.center,
+                          style: appstyle(15, AppColors.textDarkColor, FontWeight.normal),
+                        ),
+                      )
+                    : const SizedBox(),
+                receivedResponse && currentLocale.languageCode == 'cs'
+                    ? ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Text(
+                          'Toto je založeno na $count případech, kdy se  ${(probability * 100).toInt()}% jedinců identifikovalo jako ${tr('genderVar.${genderResult?.gender}')}',
+                          textAlign: TextAlign.center,
+                          style: appstyle(15, AppColors.textDarkColor, FontWeight.normal),
+                        ),
+                      )
+                    : const SizedBox(),
               ],
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true, // This ensures the sheet uses minimal necessary size
+            isDismissible: true, // Allow dismissing the sheet by tapping outside
+
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0),
+              ),
+            ),
+            backgroundColor: AppColors.jCardBgColor,
+            context: context,
+            builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'disclainer'.tr(),
+                  style: appstyle(12, AppColors.textDarkColor, FontWeight.normal),
+                ),
+              );
+            },
+          );
+        },
+        label: Text('disclainerButton'.tr()),
+        icon: const Icon(Icons.info),
       ),
     );
   }
