@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_name/constants/applystyle.dart';
@@ -57,6 +58,18 @@ class _HomePageState extends State<HomePage> {
     if (input.isEmpty) return input;
 
     return input[0].toUpperCase() + input.substring(1);
+  }
+
+  Map<String, dynamic> addTimestampToResponse(GenderName response) {
+    final Map<String, dynamic> responseJson = response.toJson();
+    responseJson['timestamp'] = FieldValue.serverTimestamp(); // Adding the timestamp key-value
+    return responseJson;
+  }
+
+  // Function to save the modified response to Firebase Firestore
+  void saveToFirebase(Map<String, dynamic> data) {
+    FirebaseFirestore.instance.collection('NameSearch').add(data);
+    // Replace 'your_collection' with the name of the collection in your Firebase Firestore where you want to save the data.
   }
 
   @override
@@ -219,6 +232,9 @@ class _HomePageState extends State<HomePage> {
                                 isFemale = gender == 'female' ? true : false;
                                 isMale = gender == 'male' ? true : false;
                                 receivedResponse = true;
+                                Map<String, dynamic> modifiedResponse = addTimestampToResponse(genderResult!);
+                                saveToFirebase(modifiedResponse);
+
                                 // genderT = tr('gender.${genderResult?.gender}');
                               } else {
                                 receivedResponse = false;
