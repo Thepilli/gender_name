@@ -11,10 +11,8 @@ void main() async {
 
   await EasyLocalization.ensureInitialized();
 
-  runApp(EasyLocalization(
-      supportedLocales: const [Locale('cs'), Locale('en')],
-      path: 'assets/translations', // <-- change the path of the translation files
-      child: const MyApp()));
+  runApp(
+      EasyLocalization(supportedLocales: const [Locale('cs'), Locale('en')], path: 'assets/translations', child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

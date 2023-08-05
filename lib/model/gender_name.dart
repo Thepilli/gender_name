@@ -34,4 +34,13 @@ class GenderName {
         "gender": gender,
         "probability": probability,
       };
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'gender': gender,
+      'count': count,
+      'probability': probability,
+      // Add other properties as needed
+    };
+  }
 }

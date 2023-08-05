@@ -61,15 +61,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Map<String, dynamic> addTimestampToResponse(GenderName response) {
-    final Map<String, dynamic> responseJson = response.toJson();
-    responseJson['timestamp'] = FieldValue.serverTimestamp(); // Adding the timestamp key-value
+    final Map<String, dynamic> responseJson = response.toMap();
+    responseJson['timestamp'] = FieldValue.serverTimestamp();
     return responseJson;
   }
 
   // Function to save the modified response to Firebase Firestore
   void saveToFirebase(Map<String, dynamic> data) {
     FirebaseFirestore.instance.collection('NameSearch').add(data);
-    // Replace 'your_collection' with the name of the collection in your Firebase Firestore where you want to save the data.
   }
 
   @override
@@ -221,6 +220,7 @@ class _HomePageState extends State<HomePage> {
                           buttonText: name == '' ? 'buttonCheck'.tr() : 'buttonCheckAgain'.tr(),
                           onPressed: () async {
                             genderResult = await GendernameService().getGender(name: nameController.text);
+
                             print(genderResult?.toJson());
                             setState(() {
                               if (genderResult?.gender != null) {
