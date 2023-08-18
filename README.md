@@ -1,4 +1,4 @@
-# Gender gueser Application
+# Gender guesser Application
 
 ## Features and Functionality
 
@@ -8,16 +8,12 @@
 
 - **Navigation:**
 
-- **Item Customization:**
-
-- **Login/Authentication with Firebase:**
-
 ## Mission and Collaboration
 
 I am committed to maintaining the application's integrity and continuously updating it with the latest information and features. We actively seek user feedback and suggestions to enhance the user experience and address evolving needs.
 
 ```
-git clone https://github.com/Thepilli/XXXX.git
+git clone https://github.com/Thepilli/gender_name.git
 ```
 
 ## Privacy and Data Security
@@ -30,6 +26,6 @@ I encourage users to provide feedback, report issues, or share suggestions for i
 
 ## License
 
-The XXX Application is released under the MIT License. Refer to the LICENSE file in the repository for more information.
+The Gender guesser Application is released under the MIT License. Refer to the LICENSE file in the repository for more information.
 
 ## Demo
