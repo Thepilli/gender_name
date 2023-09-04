@@ -1,12 +1,12 @@
 # Gender guesser Application
 
+Isn't it unbelievable that in today's era of practically unlimited possibilities, we're still inundated with marketing campaigns full of errors? 🤔 How about training a language model to avoid such mistakes?
+
 ## Features and Functionality
 
 [![Flutter 3](https://img.shields.io/badge/Flutter-3.10-02569b.svg?style=flat-square&logo=flutter&logoColor=13b9fd)](https://flutter.dev/)
 [![Dart 3](https://img.shields.io/badge/Dart-3.0-0175c2.svg?style=flat-square&logo=dart&logoColor=13b9fd)](https://dart.dev/)
 [![Firebase](https://img.shields.io/badge/Firebase--ffcc30.svg?style=flat-square&logo=firebase)](https://firebase.google.com/)
-
-- **Navigation:**
 
 ## Mission and Collaboration
 
