@@ -29,3 +29,4 @@ I encourage users to provide feedback, report issues, or share suggestions for i
 The Gender guesser Application is released under the MIT License. Refer to the LICENSE file in the repository for more information.
 
 ## Demo
+![9FDc2d338HhP_2048_1000](https://github.com/Thepilli/gender_name/assets/104307512/4e9390b2-85b7-49bc-b28e-e08d667a3fdd)
